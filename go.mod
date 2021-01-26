@@ -1,4 +1,4 @@
-module github.com/cyal1/httpx
+module github.com/projectdiscovery.io/httpx
 
 go 1.14
 
