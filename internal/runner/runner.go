@@ -302,6 +302,45 @@ func (runner *Runner) RunEnumeration() {
 				gologger.Fatalf("Could not create output file '%s': %s\n", runner.options.Output, err)
 			}
 			//nolint:errcheck // this method needs a small refactor to reduce complexity
+			//fmt.Println("only one?")
+			f.WriteString(`<style>
+    *{
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+    body {
+
+        font: normal 11px  "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+        color: #4f6b72;
+        /*background: #E6EAE9;*/
+    }
+    a {
+        color: #c75f3e;
+    }
+    table{
+        border-collapse: collapse;
+        border: 1px solid #C1DAD7;
+    }
+    tr:nth-child(odd){
+        background-color: #eeeeee;
+    }
+    tr:hover{
+        background-color: #fffeee;
+    }
+    td,th {
+        border-right: 1px solid #C1DAD7;
+        border-top: 1px solid #C1DAD7;
+        font-size:13px;
+        padding: 6px 6px 0px 12px;
+        color: #4f6b72;
+        white-space: nowrap;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style><table><th>URL</th><th>IP</th><th>Status Code</th><th>Content-Length</th><th>Title</th><th>Web Server</th>
+`)
 			defer f.Close()
 		}
 		for r := range output {
@@ -337,6 +376,7 @@ func (runner *Runner) RunEnumeration() {
 			}
 
 			row := r.str
+			//fmt.Printf("r:%v",r.StatusCode)
 			if runner.options.JSONOutput {
 				row = r.JSON()
 			}
@@ -344,7 +384,20 @@ func (runner *Runner) RunEnumeration() {
 			gologger.Silentf("%s\n", row)
 			if f != nil {
 				//nolint:errcheck // this method needs a small refactor to reduce complexity
-				f.WriteString(row + "\n")
+
+				if runner.options.HTMLOutput {
+					u := td("<a href='" + r.URL + "' title='" + r.URL + "' target='_blank'>" + r.URL + "</a>")
+					ip := strings.Replace(strings.Trim(fmt.Sprint(r.IPs), "[]"), " ", ", ", -1)
+					ip = "<td title='" + ip + "'>" + ip + "</td>"
+					status := td(strconv.Itoa(r.StatusCode))
+					cl := td(strconv.Itoa(r.ContentLength))
+					title := "<td title='" + r.Title + "'>" + r.Title + "</td>"
+					ws := "<td title='" + r.WebServer + "'>" + r.WebServer + "</td>"
+					tr := "<tr>" + u + ip + status + cl + title + ws + "</tr>"
+					f.WriteString(tr)
+				} else {
+					f.WriteString(row + "\n")
+				}
 			}
 		}
 	}(output)
@@ -739,4 +792,8 @@ func (r *Result) JSON() string {
 	}
 
 	return ""
+}
+
+func td(s string) string {
+	return "<td>" + s + "</td>"
 }
