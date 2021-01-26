@@ -5,11 +5,11 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/cyal1/httpx/common/customheader"
+	customport "github.com/cyal1/httpx/common/customports"
+	"github.com/cyal1/httpx/common/fileutil"
+	"github.com/cyal1/httpx/common/stringz"
 	"github.com/projectdiscovery/gologger"
-	"github.com/projectdiscovery/httpx/common/customheader"
-	customport "github.com/projectdiscovery/httpx/common/customports"
-	"github.com/projectdiscovery/httpx/common/fileutil"
-	"github.com/projectdiscovery/httpx/common/stringz"
 )
 
 const (

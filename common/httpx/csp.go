@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/projectdiscovery/httpx/common/slice"
+	"github.com/cyal1/httpx/common/slice"
 )
 
 // CSPHeaders is an incomplete list of most common CSP headers

@@ -4,9 +4,9 @@
 </h1>
 
 [![License](https://img.shields.io/badge/license-MIT-_red.svg)](https://opensource.org/licenses/MIT)
-[![Go Report Card](https://goreportcard.com/badge/github.com/projectdiscovery/httpx)](https://goreportcard.com/report/github.com/projectdiscovery/httpx)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/projectdiscovery/httpx/issues)
-[![GitHub Release](https://img.shields.io/github/release/projectdiscovery/httpx)](https://github.com/projectdiscovery/httpx/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cyal1/httpx)](https://goreportcard.com/report/github.com/cyal1/httpx)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/cyal1/httpx/issues)
+[![GitHub Release](https://img.shields.io/github/release/projectdiscovery/httpx)](https://github.com/cyal1/httpx/releases)
 [![Follow on Twitter](https://img.shields.io/twitter/follow/pdiscoveryio.svg?logo=twitter)](https://twitter.com/pdiscoveryio)
 [![Docker Images](https://img.shields.io/docker/pulls/projectdiscovery/httpx.svg)](https://hub.docker.com/r/projectdiscovery/httpx)
 [![Chat on Discord](https://img.shields.io/discord/695645237418131507.svg?logo=discord)](https://discord.gg/KECAGdH)
@@ -63,10 +63,10 @@ httpx is a fast and multi-purpose HTTP toolkit allow to run multiple probers usi
 
 ### From Binary
 
-The installation is easy. You can download the pre-built binaries for your platform from the [Releases](https://github.com/projectdiscovery/httpx/releases/) page. Extract them using tar, move it to your `$PATH`and you're ready to go.
+The installation is easy. You can download the pre-built binaries for your platform from the [Releases](https://github.com/cyal1/httpx/releases/) page. Extract them using tar, move it to your `$PATH`and you're ready to go.
 
 ```sh
-Download latest binary from https://github.com/projectdiscovery/httpx/releases
+Download latest binary from https://github.com/cyal1/httpx/releases
 
 ▶ tar -xvf httpx-linux-amd64.tar
 ▶ mv httpx-linux-amd64 /usr/local/bin/httpx
@@ -78,13 +78,13 @@ Download latest binary from https://github.com/projectdiscovery/httpx/releases
 httpx requires **go1.14+** to install successfully. Run the following command to get the repo - 
 
 ```sh
-▶ GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
+▶ GO111MODULE=on go get -v github.com/cyal1/httpx/cmd/httpx
 ```
 
 ### From Github
 
 ```sh
-▶ git clone https://github.com/projectdiscovery/httpx.git; cd httpx/cmd/httpx; go build; mv httpx /usr/local/bin/; httpx -version
+▶ git clone https://github.com/cyal1/httpx.git; cd httpx/cmd/httpx; go build; mv httpx /usr/local/bin/; httpx -version
 ```
 
 # Usage
@@ -248,6 +248,6 @@ https://resources.hackerone.com [301] [0] []
 
 # Thanks
 
-httpx is made with 🖤 by the [projectdiscovery](https://projectdiscovery.io) team. Community contributions have made the project what it is. See the **[Thanks.md](https://github.com/projectdiscovery/httpx/blob/master/THANKS.md)** file for more details. Do also check out these similar awesome projects that may fit in your workflow:
+httpx is made with 🖤 by the [projectdiscovery](https://projectdiscovery.io) team. Community contributions have made the project what it is. See the **[Thanks.md](https://github.com/cyal1/httpx/blob/master/THANKS.md)** file for more details. Do also check out these similar awesome projects that may fit in your workflow:
 
 Probing feature is inspired by [@tomnomnom/httprobe](https://github.com/tomnomnom/httprobe) work :heart:
