@@ -31,7 +31,12 @@ httpx is a fast and multi-purpose HTTP toolkit allow to run multiple probers usi
  # Features
 
 <h1 align="left">
-  <img src="static/httpx-run.png" alt="httpx" width="700px"></a>
+  <img src="static/httpx-cmd.png" alt="httpx" width="700px"></a>
+  <br>
+</h1>
+
+<h1 align="left">
+  <img src="static/httpx-html.png" alt="httpx" width="700px"></a>
   <br>
 </h1>
 
