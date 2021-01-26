@@ -88,6 +88,7 @@ type Options struct {
 	FollowRedirects           bool
 	StoreResponse             bool
 	JSONOutput                bool
+	HTMLOutput                bool
 	Silent                    bool
 	Version                   bool
 	Verbose                   bool
@@ -121,6 +122,7 @@ func ParseOptions() *Options {
 	flag.IntVar(&options.Retries, "retries", 0, "Number of retries")
 	flag.IntVar(&options.Timeout, "timeout", 5, "Timeout in seconds")
 	flag.StringVar(&options.Output, "o", "", "File to write output to (optional)")
+	flag.BoolVar(&options.HTMLOutput, "html", false, "Write output to html file (required -o)")
 	flag.BoolVar(&options.VHost, "vhost", false, "Check for VHOSTs")
 	flag.BoolVar(&options.ExtractTitle, "title", false, "Extracts title")
 	flag.BoolVar(&options.StatusCode, "status-code", false, "Extracts status code")
