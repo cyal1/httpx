@@ -12,6 +12,7 @@ require (
 	github.com/projectdiscovery/fdmax v0.0.2
 	github.com/projectdiscovery/gologger v1.0.1
 	github.com/projectdiscovery/hmap v0.0.1
+	github.com/cyal1/httpx v1.0.3.1
 	github.com/projectdiscovery/mapcidr v0.0.4
 	github.com/projectdiscovery/rawhttp v0.0.4
 	github.com/projectdiscovery/retryablehttp-go v1.0.1
