@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/projectdiscovery/gologger"
-	"github.com/projectdiscovery/httpx/internal/runner"
+	"github.com/cyal1/httpx/internal/runner"
 )
 
 func main() {
