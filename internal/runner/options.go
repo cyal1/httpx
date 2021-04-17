@@ -139,6 +139,7 @@ type Options struct {
 	TLSProbe                  bool
 	CSPProbe                  bool
 	OutputContentType         bool
+	HTMLOutput                bool
 	OutputIP                  bool
 	OutputCName               bool
 	Unsafe                    bool
@@ -204,6 +205,7 @@ func ParseOptions() *Options {
 	flag.StringVar(&options.RequestBody, "body", "", "Request Body")
 	flag.BoolVar(&options.Debug, "debug", false, "Debug mode")
 	flag.BoolVar(&options.Pipeline, "pipeline", false, "HTTP1.1 Pipeline")
+	flag.BoolVar(&options.HTMLOutput, "html", false, "Write output to html file (required -o)")
 	flag.BoolVar(&options.HTTP2Probe, "http2", false, "HTTP2 probe")
 	flag.BoolVar(&options.OutputIP, "ip", false, "Output target ip")
 	flag.StringVar(&options.OutputFilterString, "filter-string", "", "Filter String")

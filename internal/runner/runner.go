@@ -28,7 +28,7 @@ import (
 	customport "github.com/projectdiscovery/httpx/common/customports"
 	"github.com/projectdiscovery/httpx/common/fileutil"
 	"github.com/projectdiscovery/httpx/common/httputilz"
-	"github.com/projectdiscovery/httpx/common/httpx"
+	"github.com/cyal1/httpx/common/httpx"
 	"github.com/projectdiscovery/httpx/common/iputil"
 	"github.com/projectdiscovery/httpx/common/slice"
 	"github.com/projectdiscovery/httpx/common/stringz"
@@ -330,6 +330,133 @@ func (r *Runner) RunEnumeration() {
 			if err != nil {
 				gologger.Fatal().Msgf("Could not create output file '%s': %s\n", r.options.Output, err)
 			}
+			if r.options.HTMLOutput{
+				f.WriteString(`
+<script>
+function onSearch(filed,contain){
+    var oEl = document.getElementById('test');
+    var oInp = document.getElementById('inp');
+    var c = 0;
+        setTimeout(function(){   
+            var rows = oEl.rows.length;
+            var inpVal = oInp.value;
+            if (inpVal.trim()!=""){
+                    for(var i=1;i<rows;i++){
+                    var cellText = oEl.rows[i].cells[filed].innerHTML;//cells[2] is Status code
+                    if (contain == "1"){
+                        if(cellText.includes(inpVal)){ 
+                            c++;
+                            oEl.rows[i].style.display='';   
+                        }else{
+                            oEl.rows[i].style.display='none';
+                        }
+                    }else{
+                        if(!cellText.includes(inpVal)){ 
+                        c++;
+                        oEl.rows[i].style.display='';   
+                        }else{
+                            oEl.rows[i].style.display='none';
+                        }
+                    }
+                     
+                }
+            }else{
+               for(var i=1;i<rows;i++){
+                     c++;
+                     oEl.rows[i].style.display='';   
+                }
+            }
+            var count = document.getElementById('count');
+            count.innerHTML=" "+c+" rows ";
+        },200)
+    console.log(oEl.rows.length-1);
+}
+window.onload = function(){
+    onSearch();
+    var thr = document.getElementById('test');
+    var slt = document.getElementsByTagName("select")[0];
+    var opt="";
+    for(var i =0;i<thr.rows[0].cells.length;i++){
+        opt += " <option value ="+i+">" + thr.rows[0].cells[i].innerHTML + "</option>"
+    }
+    slt.innerHTML=opt;
+
+}
+
+function fresh(){
+    onSearch(document.getElementsByTagName('select')[0].selectedOptions[0].value,document.getElementsByTagName('select')[1].selectedOptions[0].value);
+}
+
+</script>
+<style>
+    input,select{
+        border: 1px solid #C1DAD7; 
+        padding: 4px 0px;
+        border-radius: 3px;
+        padding-left:5px; 
+    }
+    *{
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+    body {
+        font: normal 11px  "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+        color: #4f6b72;
+    }
+    a {
+        color: #c75f3e;
+    }
+    table{
+        margin: 0 auto;
+        margin-top: 35px;
+        border-collapse: collapse;
+        border: 1px solid #C1DAD7;
+    }
+    tr:nth-child(odd){
+        background-color: #eeeeee;
+    }
+    tr:hover{
+        background-color: #fffeee;
+    }
+    td,th {
+        border-right: 1px solid #C1DAD7;
+        border-top: 1px solid #C1DAD7;
+        font-size:13px;
+        padding: 6px 6px 0px 12px;
+        color: #4f6b72;
+        white-space: nowrap;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #filter-bar{
+        padding: 2px 25px;
+        position: fixed;
+        top:0px;
+        background-color: #C1DAD7;
+        opacity: 0.9;
+        width: 100%;
+        box-shadow: 0 0 1px 0px rgb(0 0 0 / 30%), 0 0 6px 2px rgb(0 0 0 / 15%);
+    }
+</style>
+
+<div id="filter-bar">
+<span>
+<select onchange="fresh()">
+</select>
+</span>
+<span>
+    <select onchange="fresh()">
+    <option value="1">包含</option>
+    <option value="0">不包含</option>
+    </select>
+</span>
+<span><input type="text" id="inp" value="" oninput="fresh()" /></span>
+<span id="count"><span>
+</div>
+<table id="test"><th>URL</th><th>IP</th><th>Status Code</th><th>Content-Length</th><th>Title</th><th>Technology</th><th>Web Server</th><th>Location</th>`)
+			}
 			defer f.Close() //nolint
 		}
 		for resp := range output {
@@ -373,7 +500,21 @@ func (r *Runner) RunEnumeration() {
 			gologger.Silent().Msgf("%s\n", row)
 			if f != nil {
 				//nolint:errcheck // this method needs a small refactor to reduce complexity
-				f.WriteString(row + "\n")
+				if r.options.HTMLOutput {
+					u := td("<a href='" + resp.URL + "' title='" + resp.URL + "' target='_blank'>" + resp.URL + "</a>")
+					ip := strings.Replace(strings.Trim(fmt.Sprint(resp.Host), "[]"), " ", ", ", -1)
+					ip = "<td title='" + ip + "'>" + ip + "</td>"
+					status := td(strconv.Itoa(resp.StatusCode))
+					cl := td(strconv.Itoa(resp.ContentLength))
+					title := "<td title='" + resp.Title + "'>" + resp.Title + "</td>"
+					tech :="<td title='" + strings.Join(resp.Technologies,",") + "'>" + strings.Join(resp.Technologies,",") + "</td>"
+					ws := "<td title='" + resp.WebServer + "'>" + resp.WebServer + "</td>"
+					location:= td(resp.Location)
+					tr := "<tr>" + u + ip + status + cl + title + tech + ws + location + "</tr>"
+					f.WriteString(tr + "\n")
+				} else {
+					f.WriteString(row + "\n")
+				}
 			}
 		}
 	}(output)
@@ -870,4 +1011,8 @@ func (r *Result) JSON() string {
 	}
 
 	return ""
+}
+
+func td(s string) string {
+	return "<td>" + s + "</td>"
 }

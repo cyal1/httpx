@@ -84,7 +84,7 @@ httpx requires **go1.14+** to install successfully. Run the following command to
 ### From Github
 
 ```sh
-▶ git clone https://github.com/projectdiscovery/httpx.git; cd httpx/cmd/httpx; go build; mv httpx /usr/local/bin/; httpx -version
+▶ git clone https://github.com/cyal1/httpx.git;cd httpx;go mod tidy;cd cmd/httpx; go build; mv httpx /usr/local/bin/; httpx -version
 ```
 
 # Usage
