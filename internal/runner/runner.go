@@ -331,7 +331,7 @@ func (r *Runner) RunEnumeration() {
 				gologger.Fatal().Msgf("Could not create output file '%s': %s\n", r.options.Output, err)
 			}
 			if r.options.HTMLOutput{
-				f.WriteString(`
+				script :=  `
 <script>
 function onSearch(filed,contain){
     var oEl = document.getElementById('test');
@@ -426,7 +426,7 @@ function fresh(){
         padding: 6px 6px 0px 12px;
         color: #4f6b72;
         white-space: nowrap;
-        max-width: 300px;
+        max-width: 270px;
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -455,7 +455,29 @@ function fresh(){
 <span><input type="text" id="inp" value="" oninput="fresh()" /></span>
 <span id="count"><span>
 </div>
-<table id="test"><th>URL</th><th>IP</th><th>Status Code</th><th>Content-Length</th><th>Title</th><th>Technology</th><th>Web Server</th><th>Location</th>`)
+`
+				thr := "<table id=\"test\"><tr>"
+				thr = thr + "<th>URL</th><th>IP</th>"
+				if r.options.OutputCName{
+					thr = thr + th("CNAME")
+				}
+				thr = thr + "<th>Status Code</th><th>Content-Length</th><th>Title</th>"
+				if r.options.TechDetect{
+					thr = thr + th("Technology")
+				}
+				thr = thr + th("Web Server")
+				if r.options.OutputContentType{
+					thr = thr + th("Content-Type")
+				}
+				if !r.options.FollowRedirects{
+					thr = thr + th("Location")
+				}
+				if r.options.OutputCDN{
+					thr = thr + th("CDN")
+				}
+				thr = thr + "</tr>"
+				//print(th)
+				f.WriteString(script + thr)
 			}
 			defer f.Close() //nolint
 		}
@@ -502,15 +524,43 @@ function fresh(){
 				//nolint:errcheck // this method needs a small refactor to reduce complexity
 				if r.options.HTMLOutput {
 					u := td("<a href='" + resp.URL + "' title='" + resp.URL + "' target='_blank'>" + resp.URL + "</a>")
-					ip := strings.Replace(strings.Trim(fmt.Sprint(resp.Host), "[]"), " ", ", ", -1)
-					ip = "<td title='" + ip + "'>" + ip + "</td>"
+					ip := "<td title='" + strings.Join(resp.A,"&NewLine;") + "'>" + resp.Host + "</td>"
 					status := td(strconv.Itoa(resp.StatusCode))
 					cl := td(strconv.Itoa(resp.ContentLength))
 					title := "<td title='" + resp.Title + "'>" + resp.Title + "</td>"
-					tech :="<td title='" + strings.Join(resp.Technologies,",") + "'>" + strings.Join(resp.Technologies,",") + "</td>"
 					ws := "<td title='" + resp.WebServer + "'>" + resp.WebServer + "</td>"
-					location:= td(resp.Location)
-					tr := "<tr>" + u + ip + status + cl + title + tech + ws + location + "</tr>"
+					tr := "<tr>" + u + ip
+					if r.options.OutputCName{
+						if len(resp.CNAMEs)!=0{
+							cname := "<td title='" + strings.Join(resp.CNAMEs,"&NewLine;" )+ "'>" + resp.CNAMEs[len(resp.CNAMEs)-1] + "</td>"
+							tr = tr + cname
+						}else{
+							tr = tr + td("")
+						}
+					}
+					tr = tr + status + cl + title
+					if r.options.TechDetect{
+						tech :="<td title='" + strings.Join(resp.Technologies,", ") + "'>" + strings.Join(resp.Technologies,",") + "</td>"
+						tr = tr + tech
+					}
+					tr = tr + ws
+					if r.options.OutputContentType{
+						tr = tr + td(resp.ContentType)
+					}
+					if !r.options.FollowRedirects{
+						tr = tr + td(resp.Location)
+					}
+					if r.options.OutputCDN{
+						var cdn string
+						if resp.CDN {
+							cdn = "✔"
+						} else {
+							cdn = ""
+						}
+						tech := td(cdn)
+						tr = tr + tech
+					}
+					tr = tr + "</tr>"
 					f.WriteString(tr + "\n")
 				} else {
 					f.WriteString(row + "\n")
@@ -1009,10 +1059,13 @@ func (r *Result) JSON() string {
 	if js, err := json.Marshal(r); err == nil {
 		return string(js)
 	}
-
 	return ""
 }
 
 func td(s string) string {
 	return "<td>" + s + "</td>"
+}
+
+func th(s string) string {
+	return "<th>" + s + "</th>"
 }
